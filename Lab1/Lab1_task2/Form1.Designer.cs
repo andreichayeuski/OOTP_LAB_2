@@ -111,7 +111,7 @@
             // Query_First
             // 
             this.Query_First.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Query_First.Location = new System.Drawing.Point(258, 356);
+            this.Query_First.Location = new System.Drawing.Point(270, 356);
             this.Query_First.Name = "Query_First";
             this.Query_First.Size = new System.Drawing.Size(92, 42);
             this.Query_First.TabIndex = 8;
@@ -132,7 +132,7 @@
             // Query_Second
             // 
             this.Query_Second.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Query_Second.Location = new System.Drawing.Point(374, 356);
+            this.Query_Second.Location = new System.Drawing.Point(392, 356);
             this.Query_Second.Name = "Query_Second";
             this.Query_Second.Size = new System.Drawing.Size(92, 42);
             this.Query_Second.TabIndex = 10;
@@ -143,7 +143,7 @@
             // Query_Third
             // 
             this.Query_Third.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Query_Third.Location = new System.Drawing.Point(490, 356);
+            this.Query_Third.Location = new System.Drawing.Point(512, 356);
             this.Query_Third.Name = "Query_Third";
             this.Query_Third.Size = new System.Drawing.Size(92, 42);
             this.Query_Third.TabIndex = 11;

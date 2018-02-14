@@ -1,0 +1,10 @@
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\bin\Debug\Lab2.exe.config
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\bin\Debug\Lab2.exe
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\bin\Debug\Lab2.pdb
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.csprojResolveAssemblyReference.cache
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.Form1.resources
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.Properties.Resources.resources
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.csproj.GenerateResource.Cache
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.csproj.CoreCompileInputs.cache
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.exe
+D:\Документы\Университет\4 семестр\ООТП\Лабораторные\Lab2\Lab2\obj\Debug\Lab2.pdb

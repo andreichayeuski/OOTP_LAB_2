@@ -19,13 +19,10 @@ namespace Lab1_task2
         public Student()
         {
             Random random = new Random();
-            Thread.Sleep(10);
-            Random random1 = new Random();
-            Thread.Sleep(10);
-            Random random2 = new Random();
+            Thread.Sleep(10); // хватит ли одного рандома?
             this.kurs = (short)random.Next(1, 5);
-            this.group = (short)random1.Next(1, 11);
-            this.name = options_of_names[random2.Next(0, 10)];
+            this.group = (short)random.Next(1, 11);
+            this.name = options_of_names[random.Next(0, 10)];
         }
         
         public int Compare(Student st1, Student st2)

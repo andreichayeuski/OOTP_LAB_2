@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ArrayOfAirplane xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Airplane>
+    <ID>12312</ID>
+    <type>cargo</type>
+    <model>
+      <name>asdas</name>
+      <country>asdas</country>
+      <year>1234</year>
+      <types>
+        <string>cargo</string>
+      </types>
+    </model>
+    <list_of_crewman>
+      <Crewman>
+        <name_first>asdas</name_first>
+        <name_second>asdas</name_second>
+        <position>sada</position>
+        <age>20</age>
+        <experience>0</experience>
+        <sex>Мale</sex>
+      </Crewman>
+      <Crewman>
+        <name_first>asd</name_first>
+        <name_second>asd</name_second>
+        <position>Second pilot</position>
+        <age>20</age>
+        <experience>0</experience>
+        <sex>Мale</sex>
+      </Crewman>
+    </list_of_crewman>
+    <count_of_spaces>1</count_of_spaces>
+    <year>12312</year>
+    <capacity>213213</capacity>
+    <date_of_maintenance>05.02.2018 0:00:00</date_of_maintenance>
+  </Airplane>
+</ArrayOfAirplane>
