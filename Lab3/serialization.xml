@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ArrayOfAirplane xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Airplane>
+    <ID>1111</ID>
+    <type>cargo</type>
+    <model>
+      <name>Boeing</name>
+      <country>USA</country>
+      <year>1916</year>
+      <types>
+        <string>cargo</string>
+        <string>passenger</string>
+      </types>
+    </model>
+    <list_of_crewman>
+      <Crewman>
+        <name_first>Andrei</name_first>
+        <name_second>Chayeuski</name_second>
+        <position>Captain</position>
+        <age>23</age>
+        <experience>0</experience>
+        <sex>Мale</sex>
+      </Crewman>
+      <Crewman>
+        <name_first>Alena</name_first>
+        <name_second>Sauchuk</name_second>
+        <position>Steward</position>
+        <age>21</age>
+        <experience>1</experience>
+        <sex>Female</sex>
+      </Crewman>
+    </list_of_crewman>
+    <count_of_spaces>2</count_of_spaces>
+    <year>2000</year>
+    <capacity>1000</capacity>
+    <date_of_maintenance>05.02.2018 0:00:00</date_of_maintenance>
+  </Airplane>
+</ArrayOfAirplane>

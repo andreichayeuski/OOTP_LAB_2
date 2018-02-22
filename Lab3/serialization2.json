@@ -1,0 +1,1 @@
+[{"ID":"123","capacity":1,"captain":"Captain Migursky","count_of_spaces":0,"date_of_maintenance":"16.02.2018 0:00:00","list_of_crewman":[{"age":20,"experience":0,"name_first":"Pavel","name_second":"Migursky","position":"Captain","sex":"Мale"}],"model":{"country":"Belarus","name":"Boeing","types":["cargo","passenger"],"year":2000},"type":"passengers","year":2000}]
