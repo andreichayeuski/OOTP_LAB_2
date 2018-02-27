@@ -18,7 +18,8 @@ namespace Lab2
         public string ID;
         public string type;
         public Company model;
-        public string captain = "";
+        public string captain = String.Empty;
+        public string second_pilot = String.Empty;
         public List<Crewman> list_of_crewman;
         public int count_of_spaces;
         public int year;
@@ -37,10 +38,18 @@ namespace Lab2
                 {
                     this.captain = cr.position + " " + cr.name_second;
                 }
+                if(cr.position.Equals("Second pilot"))
+                {
+                    this.second_pilot = cr.position + " " + cr.name_second;
+                }
             }
             if (this.captain.Equals(""))
             {
                 throw new Exception("airplane must have a captain");
+            }
+            if (this.second_pilot.Equals(""))
+            {
+                throw new Exception("airplane must have a second pilot");
             }
             this.count_of_spaces = count_of_spaces;
             this.year = year;

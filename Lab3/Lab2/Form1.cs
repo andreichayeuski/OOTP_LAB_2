@@ -13,6 +13,8 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Lab2
 {
@@ -23,17 +25,24 @@ namespace Lab2
         {
             InitializeComponent();
             this.Crewman_Position.Items.AddRange(Crewman.list_of_positions);
-            this.Airplane_Type.Items.AddRange(Airplane.types);
+            this.Airplane_Type.Items.AddRange(Airplane.types);            
         }
 
         public List<Crewman> list_of_crewmans = new List<Crewman>();
         public List<Airplane> list_of_airplanes = new List<Airplane>();
 
+        public List<Airplane> search_result = new List<Airplane>();
+        public List<Airplane> sort_result = new List<Airplane>();
+
+        #region Lab7
         private void Crewman_Add_Click(object sender, EventArgs e)
         {
             try
             {
-                if (this.Crewman_FirstName.Text.Equals(String.Empty) || this.Crewman_SecondName.Text.Equals(String.Empty) || this.Crewman_Position.Text.Equals(String.Empty) || (this.Crewman_Sex_Male.Checked == false && this.Crewman_Sex_Female.Checked == false))
+                Regex regex = new Regex("[A-ZА-Я][a-zа-я]{1,20}");
+
+                if (!regex.IsMatch(this.Crewman_FirstName.Text) || !regex.IsMatch(this.Crewman_SecondName.Text) || !regex.IsMatch(this.Crewman_Position.Text)
+                    || (this.Crewman_Sex_Male.Checked == false && this.Crewman_Sex_Female.Checked == false))
                 {
                     MessageBox.Show("information isn't found");
                 }
@@ -58,6 +67,7 @@ namespace Lab2
         {
             try
             {
+                Regex year_regex = new Regex(@"\d{4}");
                 if (this.Airplane_Crew.Text.Equals(String.Empty) || this.Airplane_ID.Text.Equals(String.Empty) || this.Airplane_Model.Text.Equals(String.Empty) || this.Airplane_Type.Text.Equals(String.Empty))
                 {
                     MessageBox.Show("information isn't found");
@@ -65,7 +75,7 @@ namespace Lab2
                 else
                 {
                     int year, capac;
-                    if ((capac = Convert.ToInt32(this.Airplane_LoadCarryingCapacity.Text)) < 0 || capac > 10000000 || (year = Convert.ToInt32(this.Airplane_YearOfConstruction.Text)) > 2018 || year < 1960)
+                    if ((capac = Convert.ToInt32(this.Airplane_LoadCarryingCapacity.Text)) < 0 || capac > 10000000 || !year_regex.IsMatch(this.Airplane_YearOfConstruction.Text))
                     {
                         MessageBox.Show("error: check digital information");
                     }
@@ -173,7 +183,7 @@ namespace Lab2
         private void Save_Click(object sender, EventArgs e)
         {
             this.Save_Dialog.FileName = "serialization.xml";
-            this.Save_Dialog.InitialDirectory = "D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab2";
+            this.Save_Dialog.InitialDirectory = "D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab3";
             this.Save_Dialog.ShowDialog();
 
             if (list_of_airplanes.Count != 0)
@@ -207,7 +217,7 @@ namespace Lab2
             try
             {
                 this.Open_Dialog.FileName = "serialization.xml";
-                this.Open_Dialog.InitialDirectory = "D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab2";
+                this.Open_Dialog.InitialDirectory = "D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab3";
                 this.Open_Dialog.ShowDialog();
 
                 List<Airplane> lst;
@@ -246,12 +256,76 @@ namespace Lab2
                 MessageBox.Show("error:" + ex.Message);
             }
         }
+        #endregion
 
         private void SearchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form2 form2 = new Form2(list_of_airplanes);
 
             form2.ShowDialog();
+            if (form2.search_result != null)
+            {
+                this.search_result = form2.search_result;
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This product is made by Andrei Chayeuski.\n Lab2 Version 2.0 \n All rights reserved. \nBSTU 2018", "Info");
+        }
+
+        private void nameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = from a in this.list_of_airplanes
+                         orderby a.captain
+                         select a;
+            var result1 = from a in result
+                          orderby a.second_pilot
+                          select a;
+            this.Airplane_List.Items.Clear();
+            this.search_result.Clear();
+            foreach (Airplane a in result)
+            {
+                this.search_result.Add(a);
+                this.Airplane_List.Items.Add(a);
+            }
+        }
+
+        private void resultOfSearchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Save_Dialog.FileName = "search.xml";
+            this.Save_Dialog.InitialDirectory = "D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab3";
+            this.Save_Dialog.ShowDialog();
+
+            if (search_result.Count != 0)
+            {
+                using (FileStream fs = new FileStream(this.Save_Dialog.FileName, FileMode.OpenOrCreate))
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Airplane>));
+                    xmlSerializer.Serialize(fs, search_result);
+                }
+            }
+        }
+
+        private void resultOfSortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Save_Dialog.FileName = "sort.xml";
+            this.Save_Dialog.InitialDirectory = "D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab3";
+            this.Save_Dialog.ShowDialog();
+
+            if (sort_result.Count != 0)
+            {
+                using (FileStream fs = new FileStream(this.Save_Dialog.FileName, FileMode.OpenOrCreate))
+                {
+                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Airplane>));
+                    xmlSerializer.Serialize(fs, sort_result);
+                }
+            }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            this.StatusLabel.Text = DateTime.Now.ToShortDateString() + ", " + DateTime.Now.ToLongTimeString();
         }
     }
 }

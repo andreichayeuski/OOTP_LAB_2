@@ -8,9 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Lab2
 {
+    [MetadataType(typeof(Form2))]
     public partial class Form2 : Form
     {
         public Form2(List<Airplane> list)
@@ -22,9 +24,12 @@ namespace Lab2
 
         public string type = String.Empty;
         public string company = String.Empty;
+        [Range(0,200)]
         public int space = -1;
+        [Range(0, 1000000)]
         public int capacity = -1;
         private List<Airplane> list;
+        public List<Airplane> search_result = new List<Airplane>();
 
         public Form2()
         {
@@ -69,6 +74,7 @@ namespace Lab2
         {
             try
             {
+                Regex text = new Regex("[A-zА-я]{2,30}");
                 SearchResult_List.Items.Clear();
                 bool wasCheck = false;
                 List<Airplane> query = new List<Airplane>(list.Count<Airplane>());
@@ -163,6 +169,7 @@ namespace Lab2
                     {
                         this.SearchResult_List.Items.Add(a);
                     }
+                    this.search_result = query;
                 }
                 else
                 {
@@ -175,7 +182,7 @@ namespace Lab2
             {
                 MessageBox.Show("Test");
             }
-            }
+        }
 
         private void Search_button_Click(object sender, EventArgs e)
         {
@@ -184,7 +191,7 @@ namespace Lab2
             {
                 bool flag = false;
                 int capac;
-                if (!this.Capacity_textBox.Text.Equals(String.Empty) && (capac = Convert.ToInt32(this.Capacity_textBox.Text)) > -1 && capac < 10000000)
+                if (!this.Capacity_textBox.Text.Equals(String.Empty) && (capac = Convert.ToInt32(this.Capacity_textBox.Text)) > -1 && capac < 10000001)
                 {
                     this.capacity = capac;
                     flag = true;

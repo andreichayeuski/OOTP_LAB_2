@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab2
 {
+    [Serializable]
     public class Company
     {
         public string name;
