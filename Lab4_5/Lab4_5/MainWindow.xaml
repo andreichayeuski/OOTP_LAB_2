@@ -5,19 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab4_5"
         mc:Ignorable="d"
-        Title="Text Editor" Height="720" Width="1024">
-    <Grid>
-        <Menu Height="40" VerticalAlignment="Top" RenderTransformOrigin="-6.99,0.69" HorizontalAlignment="Left" Width="1016">
-            <MenuItem Header="_File" x:Name="File">
-                <MenuItem Header="_New" x:Name="New"/>
-                <MenuItem Header="_Save" x:Name="Save" Click="Save_Click"/>
-                <MenuItem Header="_Open" x:Name="Open" Click="Open_Click"/>
+        Title="Text Editor" Cursor="Pen"
+        Height="720" Width="1024" AllowDrop="True">
+    <Window.Resources>
+        <ResourceDictionary Source="resources/langRU.xaml"/>
+    </Window.Resources>
+    <Grid AllowDrop="True">
+        <Menu Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Width="1016">
+            <MenuItem Header="{DynamicResource _File}" x:Name="File">
+                <MenuItem Header="{DynamicResource _New}" Click="NewWind"/>
+                <MenuItem Header="{DynamicResource _Save}" Click="Save_Click"/>
+                <MenuItem Header="{DynamicResource _Open}" Click="Open_Click"/>
             </MenuItem>
-            <MenuItem Header="_Edit" x:Name="Edit">
-                <MenuItem Header="_Copy" x:Name="Copy"/>
-                <MenuItem Header="_Paste" x:Name="Paste"/>
-                <MenuItem Header="_Font" x:Name="FontWindow"/>
-                <MenuItem Header="_Color" x:Name="FontColor"/>
+            <MenuItem Header="{DynamicResource _Edit}" x:Name="Edit">
+                <MenuItem Header="{DynamicResource _Copy}" CommandTarget="{Binding ElementName=Field}" Command="Copy"/>
+                <MenuItem Header="{DynamicResource _Paste}" CommandTarget="{Binding ElementName=Field}" Command="Paste"/>
+                <MenuItem Header="{DynamicResource _Cut}" CommandTarget="{Binding ElementName=Field}" Command="Cut"/>
+                <MenuItem Header="{DynamicResource _Undo}" CommandTarget="{Binding ElementName=Field}" Command="Undo"/>
+                <MenuItem Header="{DynamicResource _Color}" x:Name="FontColor"/>
+            </MenuItem>
+            <MenuItem Header="{DynamicResource _Lang}">
+                <MenuItem Header="{DynamicResource _Ru}" Click="SetRussian" />
+                <MenuItem Header="{DynamicResource _Eng}" Click="SetEnglish"/>
             </MenuItem>
             <ComboBox Name="FontTypes" Height="20" Width="110" FontSize="10" GotFocus="FontTypes_GotFocus">
                 <ComboBoxItem>Arial</ComboBoxItem>
@@ -26,24 +35,23 @@
                 <ComboBoxItem IsSelected="True">Segoe UI</ComboBoxItem>
                 <ComboBoxItem>Tahoma</ComboBoxItem>
             </ComboBox>
-            <Slider x:Name="Font_Size" Value="12" Minimum="0" TickFrequency="1" Maximum="100" MouseMove="Font_Size_MouseMove"
-                    PreviewMouseMove="Font_Size_MouseMove" MouseLeftButtonDown="Font_Size_MouseDown" Height="30" Width="100" ValueChanged="Font_Size_ValueChanged"/>
+            <Slider x:Name="Font_Size" Value="12" Minimum="0" ToolTip="Font Size" TickFrequency="1" Maximum="100"
+                    Height="30" Width="100" ValueChanged="Font_Size_ValueChanged"/>
+            <TextBox x:Name="FontSizeTextBox" ToolTip="Font size" Width="40" 
+                     TextChanged="FontSizeTextBox_TextChanged" Height="20" FontSize="12"/>
         </Menu>
-        <ToolBar Margin="644,0,0,649" Width="370" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top">
+        <ToolBar Width="470" AllowDrop="True" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Margin="546,0,0,0">
             <Button x:Name="_Save" ToolTip="Save" Click="Save_Click">
-                <Image Source="save.png" Height="20" Width="20"/>
+                <Image Source="resources/save.png" Height="20" Width="20" ToolTip="Save"/>
             </Button>
             <Button x:Name="_Open" ToolTip="Open" Click="Open_Click">
-                <Image Source="open.png" Height="20" Width="20"/>
+                <Image Source="resources/open.png" Height="20" Width="20" ToolTip="Open"/>
             </Button>
+            <ToggleButton FontSize="20" Content="B" Unchecked="Bold_Unchecked" Command="EditingCommands.ToggleBold" x:Name="Bold" />
+            <ToggleButton FontSize="20" Content="I" Unchecked="Italic_Unchecked" Command="EditingCommands.ToggleItalic" x:Name="Italic" />
+            <ToggleButton FontSize="20" Content="U" Unchecked="UnderLine_Unchecked" Command="EditingCommands.ToggleUnderline" x:Name="UnderLine" />
         </ToolBar>
         <RichTextBox x:Name="MainText" HorizontalAlignment="Left" Height="640" 
-                   AllowDrop="True"  Grid.Row="1" Margin="0,40,0,0" VerticalAlignment="Top" Width="1024">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text="RichTextBox"/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
+                   AllowDrop="True"  Grid.Row="1" Margin="0,40,0,0" VerticalAlignment="Top" Width="1024"/>
     </Grid>
 </Window>

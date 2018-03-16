@@ -21,14 +21,28 @@ namespace Lab4_5
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static int count_of_windows = 0;
         public MainWindow()
         {
             InitializeComponent();
+            if (count_of_windows != 0)
+            {
+                this.Title += " (" + count_of_windows++ + ") ";
+            }
+            else
+            {
+                count_of_windows++;
+            }
+            this.FontSizeTextBox.Text = this.Font_Size.Value.ToString();
+            MainText.AllowDrop = true;
+            Uri iconUri = new Uri("D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab4_5\\Lab4_5\\resources\\icon.ico", UriKind.RelativeOrAbsolute);
+            this.Icon = BitmapFrame.Create(iconUri);
+            MainText.AddHandler(RichTextBox.DragOverEvent, new DragEventHandler(DragItem), true);
+            MainText.AddHandler(RichTextBox.DropEvent, new DragEventHandler(DropItem), true);
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-
             try
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -67,9 +81,9 @@ namespace Lab4_5
             {
                 if (Font_Size.IsFocused && Font_Size.Value > 0)
                 {
-                    TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-
-                    tr.ApplyPropertyValue(FontSizeProperty, Font_Size.Value);
+                    ChangeFontSize();
+                    this.FontSizeTextBox.Text = this.Font_Size.Value.ToString();
+                    ((Slider)sender).SelectionEnd = e.NewValue;
                 }
                 else if (Font_Size.Value == 0)
                 {
@@ -105,6 +119,7 @@ namespace Lab4_5
                         else
                             textRange.Load(fs, DataFormats.Xaml);
                     }
+                    this.Title = "Text Editor (" + openFileDialog.FileName + ") ";
                 }
                 else
                 {
@@ -175,6 +190,124 @@ namespace Lab4_5
             {
                 ToolTip = Font_Size.Value.ToString();
             }
+        }
+
+        private void ChangeFontSize()
+        {
+            TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
+            tr.ApplyPropertyValue(FontSizeProperty, Font_Size.Value);
+        }
+
+        private void FontSizeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                double value;
+                if ((value = Convert.ToDouble(this.FontSizeTextBox.Text)) > 0 && value < 100)
+                {
+                    this.Font_Size.Value = Convert.ToDouble(this.FontSizeTextBox.Text);
+                    ChangeFontSize();
+                }
+                else
+                {
+                    MessageBox.Show("error: font size is uncorrect");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error: " + ex.Message);
+            }
+        }
+
+        private void DragItem(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+            e.Handled = false;
+        }
+
+        private void DropItem(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    string[] docPath = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    if (System.IO.File.Exists(docPath[0]))
+                    {
+                        try
+                        {
+                            TextRange range = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
+                            FileStream fStream = new FileStream(docPath[0], FileMode.OpenOrCreate);
+                            range.Load(fStream, DataFormats.Rtf);
+                            fStream.Close();
+                            this.Title = "Text Editor (" + docPath[0] + ") ";
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("File could not be opened. Make sure the file is a text file.");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void NewWind(object sender, RoutedEventArgs e)
+        {
+            new MainWindow().Show();
+        }
+
+        private void SetRussian(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.Resources = new ResourceDictionary()
+                {
+                    Source = new
+                        Uri("pack://application:,,,/resources/langRU.xaml")
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error: " + ex.Message);
+            }
+        }
+
+        private void SetEnglish(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.Resources = new ResourceDictionary()
+                {
+                    Source = new
+                    Uri("pack://application:,,,/resources/langEN.xaml")
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error: " + ex.Message);
+            }
+        }
+
+        private void Bold_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MainText.FontWeight = FontWeights.Normal;
+        }
+
+        private void Italic_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MainText.FontStyle = FontStyles.Normal;
+        }
+
+        private void UnderLine_Unchecked(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 }
