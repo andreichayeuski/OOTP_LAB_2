@@ -11,7 +11,7 @@
         <ResourceDictionary Source="resources/langRU.xaml"/>
     </Window.Resources>
     <Grid AllowDrop="True">
-        <Menu Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Width="1016">
+        <Menu Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Width="1016" Grid.ColumnSpan="2">
             <MenuItem Header="{DynamicResource _File}" x:Name="File">
                 <MenuItem Header="{DynamicResource _New}" Click="NewWind"/>
                 <MenuItem Header="{DynamicResource _Save}" Click="Save_Click"/>
@@ -22,7 +22,6 @@
                 <MenuItem Header="{DynamicResource _Paste}" CommandTarget="{Binding ElementName=Field}" Command="Paste"/>
                 <MenuItem Header="{DynamicResource _Cut}" CommandTarget="{Binding ElementName=Field}" Command="Cut"/>
                 <MenuItem Header="{DynamicResource _Undo}" CommandTarget="{Binding ElementName=Field}" Command="Undo"/>
-                <MenuItem Header="{DynamicResource _Color}" x:Name="FontColor"/>
             </MenuItem>
             <MenuItem Header="{DynamicResource _Lang}">
                 <MenuItem Header="{DynamicResource _Ru}" Click="SetRussian" />
@@ -35,12 +34,12 @@
                 <ComboBoxItem IsSelected="True">Segoe UI</ComboBoxItem>
                 <ComboBoxItem>Tahoma</ComboBoxItem>
             </ComboBox>
-            <Slider x:Name="Font_Size" Value="12" Minimum="0" ToolTip="Font Size" TickFrequency="1" Maximum="100"
-                    Height="30" Width="100" ValueChanged="Font_Size_ValueChanged"/>
-            <TextBox x:Name="FontSizeTextBox" ToolTip="Font size" Width="40" 
+            <Slider x:Name="Font_Size" Value="12" Minimum="0" ToolTip="Font Size" IsSnapToTickEnabled="True"  
+                    TickFrequency="2" TickPlacement="Both" Maximum="100" Height="30" Width="228" ValueChanged="Font_Size_ValueChanged"/>
+            <TextBox x:Name="FontSizeTextBox" ToolTip="Font size" Width="38" 
                      TextChanged="FontSizeTextBox_TextChanged" Height="20" FontSize="12"/>
         </Menu>
-        <ToolBar Width="470" AllowDrop="True" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Margin="546,0,0,0">
+        <ToolBar Width="448" AllowDrop="True" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Margin="558,0,0,0">
             <Button x:Name="_Save" ToolTip="Save" Click="Save_Click">
                 <Image Source="resources/save.png" Height="20" Width="20" ToolTip="Save"/>
             </Button>
@@ -51,7 +50,8 @@
             <ToggleButton FontSize="20" Content="I" Unchecked="Italic_Unchecked" Command="EditingCommands.ToggleItalic" x:Name="Italic" />
             <ToggleButton FontSize="20" Content="U" Unchecked="UnderLine_Unchecked" Command="EditingCommands.ToggleUnderline" x:Name="UnderLine" />
         </ToolBar>
-        <RichTextBox x:Name="MainText" HorizontalAlignment="Left" Height="640" 
-                   AllowDrop="True"  Grid.Row="1" Margin="0,40,0,0" VerticalAlignment="Top" Width="1024"/>
+        <RichTextBox TextChanged="OnTextChanged" x:Name="MainText" HorizontalAlignment="Left" Height="640" 
+                   AllowDrop="True" Margin="0,40,-8,0" VerticalAlignment="Top" Width="1024" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="Log" VerticalAlignment="Bottom" Height="20"/>
     </Grid>
 </Window>

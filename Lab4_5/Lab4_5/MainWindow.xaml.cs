@@ -128,7 +128,7 @@ namespace Lab4_5
             }
             catch
             {
-                MessageBox.Show("save error");
+                MessageBox.Show("open error");
             }
         }
 
@@ -203,14 +203,20 @@ namespace Lab4_5
             try
             {
                 double value;
-                if ((value = Convert.ToDouble(this.FontSizeTextBox.Text)) > 0 && value < 100)
+                if (this.FontSizeTextBox.Text.Equals(String.Empty))
                 {
-                    this.Font_Size.Value = Convert.ToDouble(this.FontSizeTextBox.Text);
-                    ChangeFontSize();
+                    Font_Size.Value = 12;
+                    this.FontSizeTextBox.Text = Font_Size.Value.ToString();
+                    throw new Exception("please, write a size");
+                }
+                if ((value = Convert.ToDouble(this.FontSizeTextBox.Text)) < 0 && value > 100)
+                {
+                    MessageBox.Show("error: font size is uncorrect");
                 }
                 else
                 {
-                    MessageBox.Show("error: font size is uncorrect");
+                    this.Font_Size.Value = Convert.ToDouble(this.FontSizeTextBox.Text);
+                    ChangeFontSize();
                 }
             }
             catch (Exception ex)
@@ -307,7 +313,31 @@ namespace Lab4_5
 
         private void UnderLine_Unchecked(object sender, RoutedEventArgs e)
         {
-           
+
+        }
+
+        private string GetLength(RichTextBox rtb)
+        {
+            int count_of_symbols = 0, count_of_lines = 0;
+            
+            var textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
+            foreach (char c in textRange.Text)
+            {
+                if (!c.Equals('\n') && (int)c != 13)
+                {
+                    count_of_symbols++;
+                }
+                else if (c.Equals('\n'))
+                {
+                    count_of_lines++;
+                }
+            }
+            return "count of symbols " + count_of_symbols + ", count of lines " + count_of_lines;
+        }
+
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            Log.Text = GetLength(MainText);
         }
     }
 }
