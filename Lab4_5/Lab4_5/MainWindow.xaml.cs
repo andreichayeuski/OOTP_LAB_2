@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Microsoft.Win32;
 using System.IO;
-
+using Microsoft.DirectX.AudioVideoPlayback;
 namespace Lab4_5
 {
     /// <summary>
@@ -21,6 +21,7 @@ namespace Lab4_5
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool flag = true;
         private static int count_of_windows = 0;
         public MainWindow()
         {
@@ -34,11 +35,12 @@ namespace Lab4_5
                 count_of_windows++;
             }
             this.FontSizeTextBox.Text = this.Font_Size.Value.ToString();
-            MainText.AllowDrop = true;
+            this.MainText.AllowDrop = true;
+            this.FontTypes.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             Uri iconUri = new Uri("D:\\Документы\\Университет\\4 семестр\\ООТП\\Лабораторные\\Lab4_5\\Lab4_5\\resources\\icon.ico", UriKind.RelativeOrAbsolute);
             this.Icon = BitmapFrame.Create(iconUri);
-            MainText.AddHandler(RichTextBox.DragOverEvent, new DragEventHandler(DragItem), true);
-            MainText.AddHandler(RichTextBox.DropEvent, new DragEventHandler(DropItem), true);
+            this.MainText.AddHandler(RichTextBox.DragOverEvent, new DragEventHandler(this.DragItem), true);
+            this.MainText.AddHandler(RichTextBox.DropEvent, new DragEventHandler(this.DropItem), true);
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -53,15 +55,21 @@ namespace Lab4_5
                 saveFileDialog.Filter = "Text Files (*.txt)|*.txt|RichText Files (*.rtf)|*.rtf|XAML Files (*.xaml)|*.xaml|All files (*.*)|*.*";
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    TextRange textRange = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
+                    TextRange textRange = new TextRange(this.MainText.Document.ContentStart, this.MainText.Document.ContentEnd);
                     using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate))
                     {
-                        if (Path.GetExtension(saveFileDialog.FileName).ToLower() == ".rtf")
-                            textRange.Save(fs, DataFormats.Rtf);
-                        else if (Path.GetExtension(saveFileDialog.FileName).ToLower() == ".txt")
-                            textRange.Save(fs, DataFormats.Text);
-                        else
-                            textRange.Save(fs, DataFormats.Xaml);
+                        switch (Path.GetExtension(saveFileDialog.FileName).ToLower())
+                        {
+                            case ".rtf":
+                                textRange.Save(fs, DataFormats.Rtf);
+                                break;
+                            case ".txt":
+                                textRange.Save(fs, DataFormats.Text);
+                                break;
+                            default:
+                                textRange.Save(fs, DataFormats.Xaml);
+                                break;
+                        }
                     }
                 }
                 else
@@ -79,16 +87,16 @@ namespace Lab4_5
         {
             try
             {
-                if (Font_Size.IsFocused && Font_Size.Value > 0)
+                if (this.Font_Size.IsFocused && this.Font_Size.Value > 0)
                 {
                     ChangeFontSize();
                     this.FontSizeTextBox.Text = this.Font_Size.Value.ToString();
                     ((Slider)sender).SelectionEnd = e.NewValue;
                 }
-                else if (Font_Size.Value == 0)
+                else if (this.Font_Size.Value == 0)
                 {
                     MessageBox.Show("error: font size doesn't be negative");
-                    Font_Size.Value = 12;
+                    this.Font_Size.Value = 12;
                 }
             }
             catch
@@ -109,15 +117,21 @@ namespace Lab4_5
                 openFileDialog.Filter = "Text Files (*.txt)|*.txt|RichText Files (*.rtf)|*.rtf|XAML Files (*.xaml)|*.xaml|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == true)
                 {
-                    TextRange textRange = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
+                    TextRange textRange = new TextRange(this.MainText.Document.ContentStart, this.MainText.Document.ContentEnd);
                     using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.OpenOrCreate))
                     {
-                        if (Path.GetExtension(openFileDialog.FileName).ToLower() == ".rtf")
-                            textRange.Load(fs, DataFormats.Rtf);
-                        else if (Path.GetExtension(openFileDialog.FileName).ToLower() == ".txt")
-                            textRange.Load(fs, DataFormats.Text);
-                        else
-                            textRange.Load(fs, DataFormats.Xaml);
+                        switch (Path.GetExtension(openFileDialog.FileName).ToLower())
+                        {
+                            case ".rtf":
+                                textRange.Load(fs, DataFormats.Rtf);
+                                break;
+                            case ".txt":
+                                textRange.Load(fs, DataFormats.Text);
+                                break;
+                            default:
+                                textRange.Load(fs, DataFormats.Xaml);
+                                break;
+                        }
                     }
                     this.Title = "Text Editor (" + openFileDialog.FileName + ") ";
                 }
@@ -132,70 +146,46 @@ namespace Lab4_5
             }
         }
 
-        private void FontTypes_GotFocus(object sender, RoutedEventArgs e)
+        private void FontUpdating(object sender, RoutedEventArgs e)
         {
-            try
+            object temp = this.MainText.Selection.GetPropertyValue(Inline.FontFamilyProperty);
+            this.FontTypes.SelectedItem = temp;
+        }
+
+        private void OnChangeFontFamily(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.FontTypes.SelectedItem != null)
             {
-                if (FontTypes.IsFocused)
-                {
-                    switch (FontTypes.SelectedIndex)
-                    {
-                        case 0:
-                            {
-                                TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-                                tr.ApplyPropertyValue(FontFamilyProperty, "Arial");
-                                break;
-                            }
-                        case 1:
-                            {
-                                TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-                                tr.ApplyPropertyValue(FontFamilyProperty, "Times New Roman");
-                                break;
-                            }
-                        case 2:
-                            {
-                                TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-                                tr.ApplyPropertyValue(FontFamilyProperty, "Calibri");
-                                break;
-                            }
-                        case 3:
-                            {
-                                TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-                                tr.ApplyPropertyValue(FontFamilyProperty, "Segoe UI");
-                                break;
-                            }
-                        case 4:
-                            {
-                                TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-                                tr.ApplyPropertyValue(FontFamilyProperty, "Tahoma");
-                                break;
-                            }
-                    }
-                }
+                this.MainText.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, this.FontTypes.SelectedItem);
             }
-            catch
-            {
-                MessageBox.Show("ERROR");
-            }
+            this.MainText.Focus();
         }
 
         private void Font_Size_MouseMove(object sender, MouseEventArgs e)
         {
-            ToolTip = Font_Size.Value.ToString();
+            this.ToolTip = this.Font_Size.Value.ToString();
         }
 
         private void Font_Size_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (Font_Size.IsFocused)
+            if (this.Font_Size.IsFocused)
             {
-                ToolTip = Font_Size.Value.ToString();
+                this.ToolTip = this.Font_Size.Value.ToString();
             }
         }
 
         private void ChangeFontSize()
         {
-            TextRange tr = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
-            tr.ApplyPropertyValue(FontSizeProperty, Font_Size.Value);
+            TextRange tr;
+            if (!this.MainText.Selection.IsEmpty)
+            {
+                tr = new TextRange(this.MainText.Selection.Start, this.MainText.Selection.End);
+            }
+            else
+            {
+                tr = new TextRange(this.MainText.CaretPosition, this.MainText.Document.ContentEnd);
+            }
+            tr.ApplyPropertyValue(FontSizeProperty, this.Font_Size.Value);
         }
 
         private void FontSizeTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -205,9 +195,9 @@ namespace Lab4_5
                 double value;
                 if (this.FontSizeTextBox.Text.Equals(String.Empty))
                 {
-                    Font_Size.Value = 12;
-                    this.FontSizeTextBox.Text = Font_Size.Value.ToString();
-                    throw new Exception("please, write a size");
+                    this.Font_Size.Value = 12;
+                    this.FontSizeTextBox.Text = this.Font_Size.Value.ToString();
+                    throw new Exception("please, write a correct size");
                 }
                 if ((value = Convert.ToDouble(this.FontSizeTextBox.Text)) < 0 && value > 100)
                 {
@@ -249,7 +239,7 @@ namespace Lab4_5
                     {
                         try
                         {
-                            TextRange range = new TextRange(MainText.Document.ContentStart, MainText.Document.ContentEnd);
+                            TextRange range = new TextRange(this.MainText.Document.ContentStart, this.MainText.Document.ContentEnd);
                             FileStream fStream = new FileStream(docPath[0], FileMode.OpenOrCreate);
                             range.Load(fStream, DataFormats.Rtf);
                             fStream.Close();
@@ -275,8 +265,7 @@ namespace Lab4_5
             {
                 this.Resources = new ResourceDictionary()
                 {
-                    Source = new
-                        Uri("pack://application:,,,/resources/langRU.xaml")
+                    Source = new Uri("pack://application:,,,/resources/langRU.xaml")
                 };
             }
             catch (Exception ex)
@@ -291,8 +280,7 @@ namespace Lab4_5
             {
                 this.Resources = new ResourceDictionary()
                 {
-                    Source = new
-                    Uri("pack://application:,,,/resources/langEN.xaml")
+                    Source = new Uri("pack://application:,,,/resources/langEN.xaml")
                 };
             }
             catch (Exception ex)
@@ -303,12 +291,12 @@ namespace Lab4_5
 
         private void Bold_Unchecked(object sender, RoutedEventArgs e)
         {
-            MainText.FontWeight = FontWeights.Normal;
+            this.MainText.FontWeight = FontWeights.Normal;
         }
 
         private void Italic_Unchecked(object sender, RoutedEventArgs e)
         {
-            MainText.FontStyle = FontStyles.Normal;
+            this.MainText.FontStyle = FontStyles.Normal;
         }
 
         private void UnderLine_Unchecked(object sender, RoutedEventArgs e)
@@ -319,7 +307,6 @@ namespace Lab4_5
         private string GetLength(RichTextBox rtb)
         {
             int count_of_symbols = 0, count_of_lines = 0;
-            
             var textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
             foreach (char c in textRange.Text)
             {
@@ -337,7 +324,7 @@ namespace Lab4_5
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            Log.Text = GetLength(MainText);
+            this.Log.Content = GetLength(this.MainText);
         }
     }
 }
